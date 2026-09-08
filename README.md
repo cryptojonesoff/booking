@@ -30,3 +30,14 @@ Next.js 16 (App Router) · Supabase (Postgres + Auth) · Stripe Checkout · Rese
 ## Build order
 
 Backend first (schema → `/pulo` → checkout → webhook, producing real order data), then the admin dashboard reading that data. Full sequencing in the approved plan.
+
+## Database direct connection
+
+Supabase project region: **ap-northeast-1** (Tokyo/SE-Asia pooler). If you ever need a
+direct psql/pg connection (migrations, one-off scripts) instead of the JS client:
+
+```
+postgresql://postgres.jyklqvatxvhzmscqkoyk:[DB-PASSWORD]@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
+```
+
+DB password is in `.env.local` on Jonas's machine / 1Password, not committed here.
