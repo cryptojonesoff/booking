@@ -33,46 +33,38 @@ export default function AdminLoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontFamily: "system-ui",
-        background: "#f5f5f5",
       }}
     >
       <form
         onSubmit={handleSubmit}
-        style={{
-          background: "#fff",
-          padding: 32,
-          borderRadius: 8,
-          width: 320,
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
-        }}
+        className="tt-card"
+        style={{ width: 320, display: "flex", flexDirection: "column", gap: 14 }}
       >
-        <h1 style={{ fontSize: 18, margin: 0 }}>Admin login</h1>
-        <label>
+        <h1 style={{ fontSize: 18, margin: 0, letterSpacing: "0.02em" }}>TABLE TALKS — Admin</h1>
+        <label className="tt-label">
           Email
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ display: "block", width: "100%", padding: 8, marginTop: 4 }}
+            className="tt-input"
+            style={{ display: "block", width: "100%", marginTop: 4 }}
           />
         </label>
-        <label>
+        <label className="tt-label">
           Password
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ display: "block", width: "100%", padding: 8, marginTop: 4 }}
+            className="tt-input"
+            style={{ display: "block", width: "100%", marginTop: 4 }}
           />
         </label>
-        {error && <p style={{ color: "crimson", fontSize: 14 }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ padding: 10, marginTop: 8 }}>
+        {error && <p style={{ color: "var(--c-crit)", fontSize: 13 }}>{error}</p>}
+        <button type="submit" disabled={loading} className="tt-btn" style={{ marginTop: 4 }}>
           {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>

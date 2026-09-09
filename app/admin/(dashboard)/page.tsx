@@ -22,19 +22,17 @@ export default async function AdminOverviewPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-      <h1 style={{ fontSize: 20 }}>{product.name} — Overview</h1>
+      <h1 className="tt-h1">{product.name} — Overview</h1>
 
       <section>
-        <h2 style={{ fontSize: 15, color: "#666" }}>Revenue (paid orders)</h2>
-        {currencies.length === 0 && <p style={{ color: "#999" }}>No paid orders yet.</p>}
+        <h2 className="tt-h2">Revenue (paid orders)</h2>
+        {currencies.length === 0 && <p className="tt-muted">No paid orders yet.</p>}
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
           {currencies.map((c) => (
-            <div key={c} style={card}>
-              <div style={{ fontSize: 12, color: "#999" }}>{c.toUpperCase()}</div>
-              <div style={{ fontSize: 22, fontWeight: 600 }}>
-                {formatMoney(revenueByCurrency[c].revenue, c)}
-              </div>
-              <div style={{ fontSize: 12, color: "#666" }}>
+            <div key={c} className="tt-card">
+              <div className="tt-card-label">{c.toUpperCase()}</div>
+              <div className="tt-card-value">{formatMoney(revenueByCurrency[c].revenue, c)}</div>
+              <div className="tt-card-sub">
                 incl. {formatMoney(revenueByCurrency[c].cif, c)} CIF ({product.cif_percentage}%)
               </div>
             </div>
@@ -43,34 +41,34 @@ export default async function AdminOverviewPage() {
       </section>
 
       <section>
-        <h2 style={{ fontSize: 15, color: "#666" }}>Orders pulse</h2>
+        <h2 className="tt-h2">Orders pulse</h2>
         <div style={{ display: "flex", gap: 16 }}>
-          <div style={card}>
-            <div style={{ fontSize: 12, color: "#999" }}>Last 24h</div>
-            <div style={{ fontSize: 22, fontWeight: 600 }}>{ordersLast24h}</div>
+          <div className="tt-card">
+            <div className="tt-card-label">Last 24h</div>
+            <div className="tt-card-value">{ordersLast24h}</div>
           </div>
-          <div style={card}>
-            <div style={{ fontSize: 12, color: "#999" }}>Last 7 days</div>
-            <div style={{ fontSize: 22, fontWeight: 600 }}>{ordersLast7d}</div>
+          <div className="tt-card">
+            <div className="tt-card-label">Last 7 days</div>
+            <div className="tt-card-value">{ordersLast7d}</div>
           </div>
         </div>
       </section>
 
       <section>
-        <h2 style={{ fontSize: 15, color: "#666" }}>Tickets sold vs capacity</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 480 }}>
+        <h2 className="tt-h2">Tickets sold vs capacity</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 480 }}>
           {tiers.map((t) => {
             const pct = t.capacity ? Math.min(100, (t.sold_count / t.capacity) * 100) : 0;
             return (
               <div key={t.id}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
                   <span>{t.name}</span>
-                  <span>
+                  <span className="tt-muted">
                     {t.sold_count}/{t.capacity ?? "∞"}
                   </span>
                 </div>
-                <div style={{ background: "#eee", height: 8, borderRadius: 4, overflow: "hidden" }}>
-                  <div style={{ background: "#333", height: 8, width: `${pct}%` }} />
+                <div className="tt-progress-track">
+                  <div className="tt-progress-fill" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
@@ -80,11 +78,3 @@ export default async function AdminOverviewPage() {
     </div>
   );
 }
-
-const card: React.CSSProperties = {
-  background: "#fff",
-  border: "1px solid #e0e0e0",
-  borderRadius: 8,
-  padding: "12px 16px",
-  minWidth: 140,
-};

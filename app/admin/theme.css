@@ -1,0 +1,207 @@
+/* TT Australia DA tokens, scoped to .tt-admin so /pulo is unaffected. */
+
+.tt-admin {
+  --bg-white: #ffffff;
+  --bg-cream: #f1f2e9;
+  --bg-offwhite: #fefefa;
+  --bg-blush: #e8dbd8;
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.8);
+  --text-tertiary: rgba(0, 0, 0, 0.6);
+  --text-muted: rgba(0, 0, 0, 0.4);
+  --text-faint: #999999;
+  --accent: #7a2436;
+  --accent-hover: rgba(122, 36, 54, 0.85);
+  --c-ok: #2f7a4d;
+  --c-warn: #9a6515;
+  --c-crit: #7a2436;
+  --c-neu: #666666;
+
+  background: var(--bg-cream);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.tt-admin a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+}
+.tt-admin a:hover {
+  color: var(--text-primary);
+}
+
+.tt-admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 24px;
+  background: var(--bg-white);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.tt-admin-nav strong {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tt-admin-nav a.active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.tt-admin-content {
+  padding: 32px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.tt-h1 {
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+.tt-h2 {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0 0 12px;
+}
+.tt-muted {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.tt-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tt-btn:hover {
+  background: var(--accent-hover);
+}
+.tt-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tt-btn-secondary {
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tt-card {
+  background: var(--bg-white);
+  border-radius: 10px;
+  padding: 16px 20px;
+  min-width: 160px;
+}
+
+.tt-card-value {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.tt-card-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.tt-card-sub {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.tt-input,
+.tt-select {
+  background: #efefef;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.tt-input::placeholder {
+  color: var(--text-faint);
+}
+.tt-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: block;
+}
+
+.tt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--bg-white);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.tt-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.tt-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.tt-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tt-progress-track {
+  background: var(--bg-blush);
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.tt-progress-fill {
+  background: var(--accent);
+  height: 8px;
+}
+
+.tt-badge {
+  font-weight: 600;
+  font-size: 13px;
+}
+.tt-badge-paid {
+  color: var(--c-ok);
+}
+.tt-badge-pending {
+  color: var(--c-warn);
+}
+.tt-badge-failed,
+.tt-badge-refunded {
+  color: var(--c-crit);
+}
+
+.tt-dl-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.tt-dl-row dt {
+  width: 180px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+.tt-dl-row dd {
+  margin: 0;
+  font-size: 14px;
+}

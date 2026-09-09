@@ -48,7 +48,7 @@ export function CsvExportButton({ orders }: { orders: Row[] }) {
   }
 
   return (
-    <button onClick={handleExport} style={{ padding: "6px 12px" }}>
+    <button onClick={handleExport} className="tt-btn">
       Export CSV
     </button>
   );
