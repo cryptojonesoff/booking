@@ -1,0 +1,197 @@
+/* PULO x Pulau storefront — same DA as tabletalksaustralia.com.au / the
+   admin dashboard (see admin/theme.css), scoped to .tt-pulo so it doesn't
+   leak into anything else. Source of truth: TT/docs/DA.md. */
+
+.tt-pulo {
+  --bg-white: #ffffff;
+  --bg-cream: #f1f2e9;
+  --bg-offwhite: #fefefa;
+  --bg-blush: #e8dbd8;
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.8);
+  --text-tertiary: rgba(0, 0, 0, 0.6);
+  --text-muted: rgba(0, 0, 0, 0.4);
+  --text-faint: #999999;
+  --accent: #7a2436;
+  --accent-hover: rgba(122, 36, 54, 0.85);
+  --font-display: "Times New Roman", Georgia, "PT Serif", serif;
+
+  background: var(--bg-cream);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+.tt-pulo a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tt-pulo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: var(--bg-white);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.tt-pulo-wordmark {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tt-pulo-wordmark span {
+  color: var(--accent);
+}
+.tt-pulo-header a.back {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.tt-pulo-header a.back:hover {
+  color: var(--accent);
+}
+
+.tt-pulo-content {
+  min-height: calc(100vh - 65px);
+}
+
+.tt-pulo-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tt-pulo-h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.tt-pulo-card {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.tt-pulo-tier {
+  display: block;
+  background: var(--bg-white);
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tt-pulo-tier:hover {
+  border-color: var(--bg-blush);
+}
+.tt-pulo-tier.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 1px 0 var(--accent) inset;
+}
+.tt-pulo-tier input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tt-pulo-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text-tertiary);
+  background: var(--bg-cream);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.tt-pulo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.tt-pulo-btn:hover {
+  background: var(--accent-hover);
+}
+.tt-pulo-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.tt-pulo-input,
+.tt-pulo-select {
+  width: 100%;
+  background: var(--bg-cream);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+.tt-pulo-input::placeholder {
+  color: var(--text-faint);
+}
+.tt-pulo-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.tt-pulo-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-cream);
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+.tt-pulo-stepper button {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: none;
+  background: var(--bg-white);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+.tt-pulo-stepper button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tt-pulo-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 16px 0;
+}
+
+@media (min-width: 900px) {
+  .tt-pulo-grid {
+    grid-template-columns: 1fr 340px !important;
+  }
+}
+
+.tt-pulo-code {
+  font-family: monospace;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  background: var(--bg-cream);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: inline-block;
+}
