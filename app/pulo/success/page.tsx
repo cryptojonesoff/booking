@@ -12,17 +12,13 @@ export default async function PuloSuccessPage({
     ? (
         await supabase
           .from("orders")
-          .select("status, buyer_name, quantity, vouchers(code)")
+          .select("status, buyer_name, quantity, tickets(code)")
           .eq("stripe_session_id", session_id)
           .single()
       ).data
     : null;
 
-  const voucher = order?.vouchers
-    ? Array.isArray(order.vouchers)
-      ? order.vouchers[0]
-      : order.vouchers
-    : null;
+  const tickets = order?.tickets ?? [];
 
   return (
     <main style={{ padding: 40, fontFamily: "system-ui", maxWidth: 480, margin: "0 auto" }}>
@@ -34,10 +30,14 @@ export default async function PuloSuccessPage({
       {order && order.status === "paid" && (
         <>
           <p>Your order is confirmed.</p>
-          {voucher && (
-            <p>
-              Ticket code: <strong>{voucher.code}</strong>
-            </p>
+          {tickets.length > 0 && (
+            <ul>
+              {tickets.map((t, i) => (
+                <li key={i}>
+                  Ticket code: <strong>{t.code}</strong>
+                </li>
+              ))}
+            </ul>
           )}
         </>
       )}

@@ -8,8 +8,7 @@ export async function sendOrderConfirmationEmail(params: {
   buyerName: string;
   productName: string;
   tierName: string;
-  quantity: number;
-  voucherCode: string;
+  tickets: { code: string; activationNames: string[] }[];
 }) {
   if (!resend || !process.env.RESEND_FROM_EMAIL) {
     // Not wired up yet — RESEND_API_KEY / RESEND_FROM_EMAIL missing. Don't
@@ -18,20 +17,26 @@ export async function sendOrderConfirmationEmail(params: {
     return;
   }
 
-  const { to, buyerName, productName, tierName, quantity, voucherCode } = params;
+  const { to, buyerName, productName, tierName, tickets } = params;
+
+  const ticketLines = tickets.flatMap((t) => [
+    `Ticket code: ${t.code}`,
+    ...(t.activationNames.length > 0 ? [`  Covers: ${t.activationNames.join(", ")}`] : []),
+  ]);
 
   await resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL,
     to,
-    subject: `Your ${productName} ticket is confirmed`,
+    subject: `Your ${productName} ticket${tickets.length > 1 ? "s are" : " is"} confirmed`,
     text: [
       `Hi ${buyerName},`,
       ``,
       `Your order is confirmed:`,
-      `${quantity}x ${tierName} — ${productName}`,
+      `${tickets.length}x ${tierName} — ${productName}`,
       ``,
-      `Ticket code: ${voucherCode}`,
-      `Keep this code — you'll need it to redeem your ticket.`,
+      `Each person needs their own ticket code — keep them, you'll need them at the door.`,
+      ``,
+      ...ticketLines,
     ].join("\n"),
   });
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { generateVoucherCode } from "@/lib/voucher";
+import { createTicketsForOrder } from "@/lib/tickets";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
@@ -77,18 +77,38 @@ export async function POST(request: Request) {
     console.error("[webhook] failed to increment sold_count", capacityError);
   }
 
+  // Shared capacity: increment every field activation this tier grants
+  // access to (standalone tickets and bundles alike draw from the same
+  // per-dinner pool — see increment_activation_sold_counts).
+  const { data: activationLinks } = await supabase
+    .from("ticket_tier_activations")
+    .select("field_activation_id")
+    .eq("ticket_tier_id", order.ticket_tier_id);
+  const activationIds = (activationLinks ?? []).map((l) => l.field_activation_id);
+  if (activationIds.length > 0) {
+    const { error: activationCapacityError } = await supabase.rpc(
+      "increment_activation_sold_counts",
+      { activation_ids: activationIds, by: order.quantity },
+    );
+    if (activationCapacityError) {
+      console.error("[webhook] failed to increment activation sold_count", activationCapacityError);
+    }
+  }
+
   const product = Array.isArray(order.products) ? order.products[0] : order.products;
   const tier = Array.isArray(order.ticket_tiers) ? order.ticket_tiers[0] : order.ticket_tiers;
-  const voucherPrefix = product?.slug ? product.slug.split("-")[0] : "TT";
-  const code = generateVoucherCode(voucherPrefix);
+  const codePrefix = product?.slug ? product.slug.split("-")[0] : "TT";
 
-  const { error: voucherError } = await supabase.from("vouchers").insert({
-    order_id: order.id,
-    code,
-    type: "fixed_ticket",
-  });
-  if (voucherError) {
-    console.error("[webhook] voucher insert failed", voucherError);
+  let tickets: { code: string; activationNames: string[] }[] = [];
+  try {
+    tickets = await createTicketsForOrder(supabase, {
+      orderId: order.id,
+      ticketTierId: order.ticket_tier_id,
+      quantity: order.quantity,
+      codePrefix,
+    });
+  } catch (err) {
+    console.error("[webhook] ticket generation failed", err);
   }
 
   await sendOrderConfirmationEmail({
@@ -96,8 +116,7 @@ export async function POST(request: Request) {
     buyerName: order.buyer_name,
     productName: product?.name ?? "Table Talks",
     tierName: tier?.name ?? "Ticket",
-    quantity: order.quantity,
-    voucherCode: code,
+    tickets,
   });
 
   return NextResponse.json({ received: true });

@@ -20,7 +20,9 @@ export default async function PuloCheckoutPage() {
 
   const { data: tiers } = await supabase
     .from("ticket_tiers")
-    .select("id, name, capacity, sold_count, sort_order, ticket_tier_prices(currency, price_cents)")
+    .select(
+      "id, name, capacity, sold_count, sort_order, includes_gym, includes_accommodation, includes_airport_transfer, ticket_tier_prices(currency, price_cents), ticket_tier_activations(field_activations(name))",
+    )
     .eq("product_id", product.id)
     .eq("active", true)
     .order("sort_order");

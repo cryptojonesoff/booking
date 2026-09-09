@@ -15,7 +15,7 @@ export default async function AdminOrderDetailPage({
 
   const product = Array.isArray(order.products) ? order.products[0] : order.products;
   const tier = Array.isArray(order.ticket_tiers) ? order.ticket_tiers[0] : order.ticket_tiers;
-  const voucher = Array.isArray(order.vouchers) ? order.vouchers[0] : order.vouchers;
+  const tickets = order.tickets ?? [];
 
   return (
     <div style={{ maxWidth: 560 }}>
@@ -49,20 +49,29 @@ export default async function AdminOrderDetailPage({
       </dl>
 
       <h2 className="tt-h2" style={{ marginTop: 24 }}>
-        Ticket
+        Tickets ({tickets.length})
       </h2>
-      {voucher ? (
-        <dl style={{ margin: 0 }}>
-          <Row label="Ticket code">
-            <strong>{voucher.code}</strong>
-          </Row>
-          <Row label="Redeemed">{voucher.redeemed ? "Yes" : "No"}</Row>
-          {voucher.redeemed_at && (
-            <Row label="Redeemed at">{new Date(voucher.redeemed_at).toLocaleString()}</Row>
-          )}
-        </dl>
+      {tickets.length === 0 ? (
+        <p className="tt-muted">No tickets generated yet (order not paid).</p>
       ) : (
-        <p className="tt-muted">No ticket generated yet (order not paid).</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {tickets.map((t) => (
+            <div key={t.id} style={{ border: "1px solid var(--tt-border, #ddd)", borderRadius: 8, padding: 12 }}>
+              <strong>{t.code}</strong>
+              <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                {(t.ticket_redemptions ?? []).map((r, i) => {
+                  const fa = Array.isArray(r.field_activations) ? r.field_activations[0] : r.field_activations;
+                  return (
+                    <li key={i} style={{ fontSize: 13 }}>
+                      {fa?.name ?? "Field activation"} —{" "}
+                      {r.redeemed ? `redeemed ${new Date(r.redeemed_at!).toLocaleString()}` : "not redeemed"}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

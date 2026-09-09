@@ -13,13 +13,16 @@ Next.js 16 (App Router) · Supabase (Postgres + Auth) · Stripe Checkout · Rese
 
 1. `npm install`
 2. Copy `.env.local.example` to `.env.local` and fill in Supabase / Stripe / Resend keys.
-3. Run `supabase/schema.sql` in the Supabase SQL editor (creates tables + seeds PULO 001 placeholder tiers).
+3. Run `supabase/schema.sql` in the Supabase SQL editor (creates tables + seeds the PULO x Pulau ticket catalog — field activations, standalone tickets, and week/2-week bundles).
 4. `npm run dev`
 
 ## Data model notes (diverges from the original brief)
 
 - **Multi-currency**: `ticket_tier_prices` holds one row per `(ticket_tier_id, currency)`. A tier only sells in the currencies it has a price row for. The buyer picks a currency before checkout.
 - **CIF %**: lives on `products.cif_percentage` (numeric, default 5.00), not hardcoded — configurable per product/project.
+- **Bundles with shared capacity**: `field_activations` holds the physical dinners (each with its own capacity); `ticket_tiers` are the sellable SKUs (standalone tickets + week/2-week bundles); `ticket_tier_activations` declares which activation(s) a tier grants access to. Standalone and bundle buyers alike draw from the same `field_activations.sold_count`, so a dinner can't be oversold across tiers — see `increment_activation_sold_counts` in `supabase/schema.sql`.
+- **Perks, not inventory**: `ticket_tiers.includes_gym` / `includes_accommodation` / `includes_airport_transfer` are flags, not a stock table — they exist only to let `/admin` count "how many rooms/transfers to organise" from paid orders.
+- **Tickets, not vouchers**: `tickets` holds one row per person (per unit of `orders.quantity`), each with its own code. `ticket_redemptions` holds one row per `(ticket, field_activation)` so a bundle ticket can be checked in separately at each dinner it covers.
 
 ## Routes (planned, per build plan)
 

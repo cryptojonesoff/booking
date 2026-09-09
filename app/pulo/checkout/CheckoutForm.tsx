@@ -7,8 +7,25 @@ type Tier = {
   name: string;
   capacity: number | null;
   sold_count: number;
+  includes_gym: boolean;
+  includes_accommodation: boolean;
+  includes_airport_transfer: boolean;
   ticket_tier_prices: { currency: string; price_cents: number }[];
+  ticket_tier_activations: { field_activations: { name: string } | { name: string }[] | null }[];
 };
+
+function tierIncludes(t: Tier) {
+  const activations = t.ticket_tier_activations
+    .map((l) => (Array.isArray(l.field_activations) ? l.field_activations[0] : l.field_activations))
+    .filter((fa): fa is { name: string } => !!fa)
+    .map((fa) => fa.name);
+  const perks = [
+    t.includes_gym && "Gym",
+    t.includes_accommodation && "Accommodation",
+    t.includes_airport_transfer && "Airport transfer",
+  ].filter(Boolean) as string[];
+  return [...activations, ...perks].join(" · ");
+}
 
 export function CheckoutForm({ productId, tiers }: { productId: string; tiers: Tier[] }) {
   const [tierId, setTierId] = useState(tiers[0]?.id ?? "");
@@ -95,6 +112,10 @@ export function CheckoutForm({ productId, tiers }: { productId: string; tiers: T
           ))}
         </select>
       </label>
+
+      {selectedTier && (
+        <p style={{ fontSize: 13, color: "#666" }}>Includes: {tierIncludes(selectedTier)}</p>
+      )}
 
       {price && (
         <p>
