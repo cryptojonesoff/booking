@@ -98,3 +98,30 @@ select t.id, 'usd', 8100  -- placeholder: ~$81
 from ticket_tiers t join products p on p.id = t.product_id
 where p.slug = 'pulo-001' and t.name = 'Chef''s Table Dinner'
 on conflict (ticket_tier_id, currency) do nothing;
+
+-- Atomic capacity increment, called from the Stripe webhook so concurrent
+-- paid orders for the same tier can't race each other's sold_count update.
+create or replace function increment_tier_sold_count(tier_id uuid, by integer)
+returns void as $$
+begin
+  update ticket_tiers set sold_count = sold_count + by where id = tier_id;
+end;
+$$ language plpgsql;
+
+-- RLS: enabled on every table. products/ticket_tiers/ticket_tier_prices get
+-- an anon-readable policy (needed for the public /pulo pages using the
+-- anon key). orders/vouchers get NO anon policy at all — buyer name/email
+-- and voucher codes are only ever read/written server-side via the
+-- service-role client (lib/supabase/admin.ts), used by /api/checkout,
+-- the Stripe webhook, and the admin dashboard.
+alter table products enable row level security;
+alter table ticket_tiers enable row level security;
+alter table ticket_tier_prices enable row level security;
+alter table orders enable row level security;
+alter table vouchers enable row level security;
+
+create policy "Public read access" on products for select using (true);
+create policy "Public read access" on ticket_tiers for select using (true);
+create policy "Public read access" on ticket_tier_prices for select using (true);
+-- No policies on orders/vouchers — anon key has zero access; only the
+-- service-role key (which bypasses RLS entirely) can touch them.
